@@ -1,0 +1,68 @@
+package models
+
+type Student struct {
+	StudentId    int    `gorm:"primary_key;column:student_id" json:"student_id"`
+	StudentName  string `gorm:"column:student_name" json:"student_name"`
+	StudentSex   int    `gorm:"column:student_sex;default:0" json:"student_sex"`
+	StudentAge   int    `gorm:"column:student_age;default:18" json:"student_age"`
+	StudentGrade int    `gorm:"column:student_grade;default:1" json:"student_grade"`
+	StudentMajor string `gorm:"column:student_major;" json:"student_major"`
+	AdminId      int    `gorm:"column:admin_id" json:"admin_id"`
+	Created      int64  `gorm:"column:created" json:"created"`
+}
+
+func (c *Student) TableName() string {
+	return "student"
+}
+
+type Administrator struct {
+	AdminId   int    `gorm:"primary_key;column:admin_id" json:"admin_id"`
+	AdminName string `gorm:"column:admin_name" json:"admin_name"`
+	AdminSex  int    `gorm:"column:admin_sex" json:"admin_sex"`
+	AdminAge  int    `gorm:"column:admin_age" json:"admin_age"`
+	Password  string `gorm:"column:password" json:"password"`
+	Created   int64  `gorm:"column:created" json:"created"`
+}
+
+type BookType struct {
+	BookTypeId   int   `gorm:"primary_key;column:book_type_id" json:"book_type_id"`
+	BookTypeName int   `gorm:"column:book_type_name" json:"book_type_name"`
+	Created      int64 `gorm:"column:created" json:"created"`
+}
+
+type Book struct {
+	BookId       int     `gorm:"primary_key;column:book_id" json:"book_id"`
+	BookName     string  `gorm:"column:book_name" json:"book_name"`
+	BookAuthor   string  `gorm:"column:book_author" json:"book_author"`
+	BookPrice    float32 `gorm:"column:book_price;default:50" json:"book_price"`
+	BookTypeId   int     `gorm:"column:book_type_id" json:"book_type_id"`
+	BookTypeName string  `gorm:"column:book_type_name" json:"book_type_name"`
+	Created      int64   `gorm:"column:created" json:"created"`
+	AdminId      int     `gorm:"column:admin_id" json:"admin_id"`
+	BorrowState  int     `gorm:"column:borrow_state" json:"borrow_state"`
+}
+
+type Borrow struct {
+	BorrowId    int    `gorm:"primary_key;column:borrow_id" json:"borrow_id"`
+	BookId      int    `gorm:"column:book_id" json:"book_id"`
+	BookName    string `gorm:"column:book_name" json:"book_name"`
+	StudentId   int    `gorm:"column:student_id" json:"student_id"`
+	SutentName  string `gorm:"column:student_name" json:"student_name"`
+	StartTime   int64  `gorm:"column:start_time" json:"start_time"`
+	EndTime     int64  `gorm:"column:end_time" json:"end_time"`
+	BorrowDays  int64  `gorm:"column:borrow_days" json:"borrow_days"`
+	AdminId     int    `gorm:"column:admin_id" json:"admin_id"`
+	BorrowState int    `gorm:"column:borrow_state" json:"borrow_state"`
+}
+
+type ResData struct {
+	Code int         `json:"code"` //0:成功，1：错误并提示
+	Msg  string      `json:"msg"`
+	Data interface{} `json:"data"`
+}
+
+type Pager struct {
+	Limit     int `json:"limit"`
+	Page      int `json:"page"`
+	PageCount int `json:"page_count"`
+}
