@@ -25,7 +25,7 @@
                     <div class="ub-f1">录入管理员</div>
                     <div class="ub-f1">入库时间</div>
                 </div>
-                <div class="autoLoad" style="height: 75vh;">
+                <div style="min-height:60vh;max-height: 70vh;overflow-y: auto;">
                     <div class="ub p-tb-10 tr">
                         <div class="ub-f1">1110</div>
                         <div class="ub-f1">fff</div>
@@ -37,8 +37,10 @@
                         <div class="ub-f1">rr</div>
                     </div>
                 </div>
+                <pager v-if="pager" :page="pager.page" :page-count="pager.page_count"></pager>
             </section>
         </div>
     </div>
+    <script src="/static/js/student/studentList.js"></script>
 </body>
 </html>

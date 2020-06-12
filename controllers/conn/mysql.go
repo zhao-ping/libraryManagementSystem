@@ -36,11 +36,11 @@ func newORM() {
 		time.Sleep(5 * time.Second)
 		orm, err = gorm.Open("mysql", connStr)
 	}
-
 	orm.CommonDB()
 	orm.DB().SetMaxOpenConns(1000)
 	orm.DB().SetMaxIdleConns(10)
 	orm.DB().SetConnMaxLifetime(time.Hour)
+	orm.LogMode(true)
 	db = orm
 }
 

@@ -64,5 +64,10 @@ type ResData struct {
 type Pager struct {
 	Limit     int `json:"limit"`
 	Page      int `json:"page"`
+	Count     int `json:"count"`
 	PageCount int `json:"page_count"`
+}
+type List struct {
+	Pager Pager       `json:"pager"`
+	List  interface{} `json:"list"`
 }

@@ -4,6 +4,8 @@ import (
 	"fmt"
 	"time"
 
+	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/base"
+
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/conn"
 	_ "git.zituo.net/zhaoping/LibraryManagementSystem/controllers/conn"
 
@@ -16,6 +18,7 @@ type StudentController struct {
 }
 
 func (c *StudentController) StudentList() {
+	page, _ := c.GetInt("page", 1)
 	limit, _ := c.GetInt("limit", 10)
 	student_name := c.GetString("student_name", "")
 	student_id, _ := c.GetInt("student_id", 0)
@@ -28,19 +31,9 @@ func (c *StudentController) StudentList() {
 	}
 
 	students := make([]models.Student, 0)
-	db := conn.GetORM()
-	dbErr := db.Where(&student).Find(&students).Limit(limit).Error
 
-	resData := models.ResData{
-		Code: 1,
-		Msg:  "查询学生列表失败",
-		Data: nil,
-	}
-	if dbErr == nil {
-		resData.Code = 0
-		resData.Msg = "success"
-		resData.Data = students
-	}
+	resData := base.GetListFormDB(students, students, page, limit)
+
 	c.Data["json"] = resData
 	c.ServeJSON()
 }

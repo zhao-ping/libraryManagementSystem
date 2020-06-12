@@ -31,4 +31,5 @@ input.search{width: 200px;margin-right: -1px;border-radius: 0px;}
 .content-page {margin-left: 300px;padding: 20px;min-height: 100vh;box-sizing: border-box; overflow-x: hidden;overflow-y: scroll;background-color: #f7f7f7;}
 .ub.ub-d-ver>*{width: 100%;box-sizing: border-box;}
 .table .tr{padding: 15px;border-bottom: 1px solid #dee2e6;}
-.autoLoad{overflow-x: hidden;overflow-y: auto;}
+.pager{text-align: right;margin-top: 20px;}
+.pager .page{height: 30px;line-height: 30px;text-align: center;padding: 0 15px;border: 1px solid rgba(107,94,174,0.1);color: #6c757d;font-size: 14px;text-align: center;display: inline-block;margin: 2px;border-radius: 3px;}
