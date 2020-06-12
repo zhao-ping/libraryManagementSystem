@@ -8,6 +8,7 @@ type Student struct {
 	StudentGrade int    `gorm:"column:student_grade;default:1" json:"student_grade"`
 	StudentMajor string `gorm:"column:student_major;" json:"student_major"`
 	AdminId      int    `gorm:"column:admin_id" json:"admin_id"`
+	AdminName    string `gorm:"column:admin_name" json:"admin_name"`
 	Created      int64  `gorm:"column:created" json:"created"`
 }
 
@@ -24,10 +25,18 @@ type Administrator struct {
 	Created   int64  `gorm:"column:created" json:"created"`
 }
 
+func (c *Administrator) TableName() string {
+	return "administrator"
+}
+
 type BookType struct {
 	BookTypeId   int   `gorm:"primary_key;column:book_type_id" json:"book_type_id"`
 	BookTypeName int   `gorm:"column:book_type_name" json:"book_type_name"`
 	Created      int64 `gorm:"column:created" json:"created"`
+}
+
+func (c *BookType) TableName() string {
+	return "book_type"
 }
 
 type Book struct {
@@ -42,6 +51,10 @@ type Book struct {
 	BorrowState  int     `gorm:"column:borrow_state" json:"borrow_state"`
 }
 
+func (c *Book) TableName() string {
+	return "book"
+}
+
 type Borrow struct {
 	BorrowId    int    `gorm:"primary_key;column:borrow_id" json:"borrow_id"`
 	BookId      int    `gorm:"column:book_id" json:"book_id"`
@@ -53,6 +66,10 @@ type Borrow struct {
 	BorrowDays  int64  `gorm:"column:borrow_days" json:"borrow_days"`
 	AdminId     int    `gorm:"column:admin_id" json:"admin_id"`
 	BorrowState int    `gorm:"column:borrow_state" json:"borrow_state"`
+}
+
+func (c *Borrow) TableName() string {
+	return "borrow"
 }
 
 type ResData struct {

@@ -21,8 +21,9 @@ body{color: #6c757d;font-size: 14px;}
 .btn.small.orange{background-color: #fd7e14;}
 .btn.small.teal{background-color: #02a8b5;}
 .btn.small.green{background-color: #0acf97;}
+.btn.w-100{width: 100%;box-sizing: border-box;}
 
-input{display: block;width: 100%;border-radius: 3px;border: 1px solid #dee2e6;height: 40px;box-sizing: border-box;font-size: 12px;padding: 0 15px;}
+input,select{display: block;width: 100%;border-radius: 3px;border: 1px solid #dee2e6;height: 40px;box-sizing: border-box;font-size: 12px;padding: 0 15px;}
 input.search{width: 200px;margin-right: -1px;border-radius: 0px;}
 
 .left-side-menu{width: 300px;z-index: 10;background: linear-gradient(135deg,#8f75da 0,#727cf5 60%);bottom: 0;position: fixed;-webkit-transition: all .2s ease-out;transition: all .2s ease-out;top: 0;}
@@ -33,3 +34,6 @@ input.search{width: 200px;margin-right: -1px;border-radius: 0px;}
 .table .tr{padding: 15px;border-bottom: 1px solid #dee2e6;}
 .pager{text-align: right;margin-top: 20px;}
 .pager .page{height: 30px;line-height: 30px;text-align: center;padding: 0 15px;border: 1px solid rgba(107,94,174,0.1);color: #6c757d;font-size: 14px;text-align: center;display: inline-block;margin: 2px;border-radius: 3px;}
+
+.toast{position: fixed;right: 30px;top: 30px;background-color:rgba(0,0,0,0.9);color: #fff;font-size: 16px;line-height: 24px;padding: 5px 15px;border-radius: 10px;opacity: 0;transition: all 0.3s;}
+.toast.show{opacity: 1;transition: all 0.3s;}

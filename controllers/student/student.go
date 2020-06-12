@@ -32,7 +32,25 @@ func (c *StudentController) StudentList() {
 
 	students := make([]models.Student, 0)
 
-	resData := base.GetListFormDB(students, students, page, limit)
+	var count int
+	db := conn.GetORM()
+	dbErr := db.Where(&student).Offset(page - 1).Limit(limit).Find(&students).Count(&count).Error
+
+	resData := models.ResData{
+		Code: 1,
+		Msg:  "查询失败",
+		Data: nil,
+	}
+	if dbErr == nil {
+		pager := base.GetPager(page, limit, count)
+		list := models.List{
+			Pager: pager,
+			List:  students,
+		}
+		resData.Code = 0
+		resData.Msg = "success"
+		resData.Data = list
+	}
 
 	c.Data["json"] = resData
 	c.ServeJSON()
@@ -44,7 +62,7 @@ func (c *StudentController) NewStudent() {
 	student_sex, _ := c.GetInt("student_sex", 0)
 	student_age, _ := c.GetInt("student_age", 20)
 	student_grade, _ := c.GetInt("student_grade", 1)
-	admin_id, _ := c.GetInt("admin_id", 0)
+	admin_id, _ := c.GetInt("admin_id", 1)
 
 	if student_name == "" {
 		resData := models.ResData{
@@ -55,8 +73,24 @@ func (c *StudentController) NewStudent() {
 		fmt.Println(resData)
 		c.Data["json"] = resData
 		c.ServeJSON()
+		return
 	}
+	resData := models.ResData{}
+	db := conn.GetORM()
 
+	admin := models.Administrator{
+		AdminId: admin_id,
+	}
+	administrator := models.Administrator{}
+	adminErr := db.Where(&admin).First(&administrator)
+	if adminErr != nil {
+		resData.Code = 1
+		resData.Msg = "没有查到管理员"
+		resData.Data = nil
+		c.Data["json"] = resData
+		c.ServeJSON()
+		return
+	}
 	student := models.Student{
 		StudentName:  student_name,
 		StudentGrade: student_grade,
@@ -64,11 +98,12 @@ func (c *StudentController) NewStudent() {
 		StudentAge:   student_age,
 		StudentSex:   student_sex,
 		AdminId:      admin_id,
+		AdminName:    administrator.AdminName,
 		Created:      time.Now().Unix(),
 	}
-	db := conn.GetORM()
+
 	dbErr := db.Create(&student).Error
-	resData := models.ResData{
+	resData = models.ResData{
 		Code: 1,
 		Msg:  "新生入库失败",
 		Data: nil,
@@ -77,7 +112,7 @@ func (c *StudentController) NewStudent() {
 		resData.Code = 1
 		resData.Msg = "新生入库成功！"
 	}
+
 	c.Data["json"] = resData
 	c.ServeJSON()
-
 }

@@ -1,5 +1,6 @@
 "use strict";
 
+axios.defaults.baseURL = 'http://localhost:8080/api/';
 axios.defaults.timeout = 5000;
 axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8';
 
@@ -14,13 +15,18 @@ function getData(url, t) {
 
   return new Promise(function (resolve, reject) {
     try {
-      axios.request("".concat(location.origin, "/v1/api/").concat(url), {
+      axios.request(url, {
         method: method,
         data: method.toLowerCase() != "get" ? JSON.stringify(formData) : null,
         params: method.toLowerCase() == "get" ? formData : null
       }).then(function (r) {
         var res = r.data;
-        resolve(res);
+
+        if (res.code == 0) {
+          resolve(res.data);
+        } else if (res.code == 1) {
+          t.$toast(res.msg);
+        }
       })["catch"](function (error) {
         if (error.message.indexOf("timeout") != -1) {
           t.$toast("请求超时，请重复此操作或者刷新页面！");
@@ -32,3 +38,46 @@ function getData(url, t) {
     }
   });
 }
+
+var vueExtends = {
+  formateDateTime: function formateDateTime(time) {
+    var dateTime = new Date(time * 1000);
+    var year = dateTime.getFullYear();
+    var month = dateTime.getMonth() + 1;
+    var day = dateTime.getDate();
+    return "".concat(year, "-").concat(month, "-").concat(day);
+  },
+  $toast: function $toast(msg) {
+    var duration = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : 1500;
+    var toast = document.createElement('div');
+    toast.innerText = msg;
+    toast.className = "toast";
+    document.body.append(toast);
+    var timer = 300,
+        everyTimer = 5,
+        stepOpacity = 1 / timer * everyTimer;
+    var opacity = 0;
+    var showInterval = setInterval(function () {
+      opacity += stepOpacity;
+
+      if (opacity <= 1) {
+        toast.style.opacity = opacity;
+      } else {
+        clearInterval(showInterval);
+      }
+    }, everyTimer);
+    setTimeout(function () {
+      var hideInterval = setInterval(function () {
+        opacity -= stepOpacity;
+
+        if (opacity >= 0) {
+          toast.style.opacity = opacity;
+        } else {
+          clearInterval(hideInterval);
+          document.body.removeChild(toast);
+        }
+      }, everyTimer);
+    }, duration);
+  }
+};
+Object.assign(Vue.prototype, vueExtends);
