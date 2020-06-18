@@ -5,19 +5,32 @@ var app=new Vue({
             formData:{
                 student_id:null,
                 student_name:null,
+                page:1,
             },
             pager:null,
             list:null
         }
     },
+    methods:{
+        reset(){
+            this.formData.student_id=null;
+            this.formData.student_name=null;
+            this.research();
+        },
+        research(i){
+            this.formData.page=i||1;
+            this.getList();
+        },
+        getList(){
+            getData('/student/list',this,{formData:this.formData}).then(r=>{
+                this.list=r.list;
+                this.pager=r.pager;
+            })
+        }
+    },
     created(){
-        getData('/student/list',this,{formData:this.formData}).then(r=>{
-            this.list=r.list;
-            this.pager=r.pager;
-        })
+        this.getList()
     },
     mounted(){
-        var time=vueExtends.formateDateTime(1591943058);
-        console.log(time)
     }
 })

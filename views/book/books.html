@@ -2,12 +2,84 @@
 <html lang="en">
 <head>
     <<template "temp/baseFile.html" .>>
-    <title>书籍列表</title>
+    <title>学生列表</title>
 </head>
 <body>
     <<template "temp/sideMenu.html" .>>
-    <div class="content-page">
-        书籍查询、编辑、下架
+    <div id="app" class="content-page">
+        <div class="bg-white p-30">
+            <div class="bb-1 text-20 pb-10 mb-30"><b>书籍列表</b></div>
+            <div class="ub ub-ac mb-30">
+                <p class="ub-f1"></p>
+                <input class="search" v-model.number="formData.book_id" type="text" placeholder="请输入书籍编号">
+                <input class="search" v-model="formData.book_name" type="text" placeholder="请输入书名">
+                <div @click="research" class="btn ml-10">搜索</div>
+                <div @click="reset" class="btn ml-10">重置</div>
+            </div>
+            <section class="text-center table">
+                <div class="ub bg-purple-1 p-15">
+                    <div class="ub-f1">书籍编号</div>
+                    <div class="ub-f2">名称</div>
+                    <div class="ub-f1">作者</div>
+                    <div class="ub-f1">价格</div>
+                    <div class="ub-f2">分类</div>
+                    <div class="ub-f1">录入管理员</div>
+                    <div style="width: 100px;">入库时间</div>
+                    <div style="width: 130px;">操作</div>
+                </div>
+                <div style="min-height:60vh;max-height: 70vh;overflow-y: auto;">
+                    <template v-if="list&&list.length>0">
+                        <div v-for="(item,index) in list" class="ub p-tb-10 tr">
+                            <div class="ub-f1" v-text="item.book_id"></div>
+                            <div class="ub-f2" v-text="item.book_name"></div>
+                            <div class="ub-f1" v-text="item.book_author"></div>
+                            <div class="ub-f1" v-text="item.book_price"></div>
+                            <div class="ub-f2" v-text="item.book_type_name"></div>
+                            <div class="ub-f1" v-text="item.admin_name"></div>
+                            <div style="width: 100px;" v-text="formateDateTime(item.created)"></div>
+                            <div style="width: 130px;">
+                                <template v-if="item.delete_state==0">
+                                    <span @click="deletBook(item,index)"  class="btn small purple">下架</span>
+                                    <span @click="showBorrowBook(index)" v-if="item.borrow_state==0" class="btn small green">借阅</span>
+                                    <span v-else class="btn small red">已借出</span>
+                                </template>
+                                <span v-else class="btn small grey">已下架</span>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <p class="p-30">没有检索出数据</p>
+                    </template>
+                </div>
+                <pager v-if="pager" :page="pager.page" @change="research" :page-count="pager.page_count"></pager>
+            </section>
+        </div>
+        <popup v-if="list" ref="popupBorrow">
+            <div style="width: 600px;">
+                <div class="pb-15 bb-1 text-20 p-20">图书借阅</div>
+                <section class="p-20">
+                    <div class="bg-indigo-1 p-20 ub ub-a-center">
+                        <div class="ub-f1">
+                            <span class="text-16 p-5">《{{list[currentBookIndex].book_name}}》</span>
+                            <span class="bg-indigo-1 br-3 display-ib line-h-20 text-12 p-lr-10" v-text="list[currentBookIndex].book_author"></span>
+                        </div>
+                        <span class="text-18">￥{{list[currentBookIndex].book_price}}</span>
+                    </div>
+                    <div class="pt-20" style="width: 300px;margin: 0 auto;">
+                        <div class="pt-20">
+                            <p class="pb-10">学号</p>
+                            <input v-model="borrowInfo.student_id" type="text" placeholder="请输入学号">
+                        </div>
+                        <div class="pt-20">
+                            <p class="pb-10">借阅时间（天）</p>
+                            <input v-model.number="borrowInfo.borrow_days" type="number" placeholder="请输入借阅时间">
+                        </div>
+                        <div @click="borrowBook" class="btn mt-20 w-100">确定</div>
+                    </div>
+                </section>
+            </div>
+        </popup>
     </div>
+    <script src="/static/js/book/bookList.js"></script>
 </body>
 </html>

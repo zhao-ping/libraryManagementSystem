@@ -6,24 +6,36 @@ var app = new Vue({
     return {
       formData: {
         student_id: null,
-        student_name: null
+        student_name: null,
+        page: 1
       },
       pager: null,
       list: null
     };
   },
-  created: function created() {
-    var _this = this;
+  methods: {
+    reset: function reset() {
+      this.formData.student_id = null;
+      this.formData.student_name = null;
+      this.research();
+    },
+    research: function research(i) {
+      this.formData.page = i || 1;
+      this.getList();
+    },
+    getList: function getList() {
+      var _this = this;
 
-    getData('/student/list', this, {
-      formData: this.formData
-    }).then(function (r) {
-      _this.list = r.list;
-      _this.pager = r.pager;
-    });
+      getData('/student/list', this, {
+        formData: this.formData
+      }).then(function (r) {
+        _this.list = r.list;
+        _this.pager = r.pager;
+      });
+    }
   },
-  mounted: function mounted() {
-    var time = vueExtends.formateDateTime(1591943058);
-    console.log(time);
-  }
+  created: function created() {
+    this.getList();
+  },
+  mounted: function mounted() {}
 });

@@ -36,6 +36,6 @@ func (c *MainController) NewStudent() {
 func (c *MainController) Borrows() {
 	c.TplName = "borrow/borrows.html"
 }
-func (c *MainController) Back() {
-	c.TplName = "borrow/back.html"
+func (c *MainController) TimeoutList() {
+	c.TplName = "borrow/timeoutList.html"
 }

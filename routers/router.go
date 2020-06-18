@@ -2,6 +2,7 @@ package routers
 
 import (
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers"
+	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/auth"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/book"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/borrow"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/login"
@@ -12,7 +13,7 @@ import (
 func init() {
 	// 路由
 	// 错误处理
-	beego.ErrorController(&controllers.ErrorController{})
+	// beego.ErrorController(&controllers.ErrorController{})
 	// 登录
 	beego.Router("/login", &controllers.MainController{}, "get:Login")
 	// 数据
@@ -22,7 +23,7 @@ func init() {
 	beego.Router("/", &controllers.MainController{}, "get:Books")
 	// 借阅
 	beego.Router("/borrow/list", &controllers.MainController{}, "get:Borrows")
-	beego.Router("/borrow/back", &controllers.MainController{}, "get:Back")
+	beego.Router("/borrow/list/timeout", &controllers.MainController{}, "get:TimeoutList")
 	// 学生
 	beego.Router("/student/list", &controllers.MainController{}, "get:Students")
 	beego.Router("/student/new", &controllers.MainController{}, "get:NewStudent")
@@ -37,14 +38,17 @@ func init() {
 		beego.NSNamespace("/book",
 			beego.NSRouter("/list", &book.BookController{}, "get:BookList"),
 			beego.NSRouter("/new", &book.BookController{}, "post:NewBook"),
+			beego.NSRouter("/delete", &book.BookController{}, "delete:DeletBook"),
 			beego.NSRouter("/type/list", &book.BookController{}, "get:BookTypeList"),
-			beego.NSRouter("/type/new", &book.BookController{}, "get:NewBookType"),
 		),
 		beego.NSNamespace("/borrow",
+			beego.NSRouter("/", &borrow.BorrowController{}, "post:Borrow"),
 			beego.NSRouter("/list", &borrow.BorrowController{}, "get:BorrowList"),
-			beego.NSRouter("/back", &borrow.BorrowController{}, "get:BackList"),
+			beego.NSRouter("/back", &borrow.BorrowController{}, "put:Back"),
+			beego.NSRouter("/list/timeout", &borrow.BorrowController{}, "get:TimeoutList"),
 		),
 	)
 	beego.AddNamespace(ns)
+	beego.InsertFilter("/api/*", beego.BeforeExec, auth.ApiAuth)
 	beego.Run()
 }

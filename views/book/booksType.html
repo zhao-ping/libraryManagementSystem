@@ -6,8 +6,28 @@
 </head>
 <body>
     <<template "temp/sideMenu.html" .>>
-    <div class="content-page">
-        书籍分类
+    <div id="app" class="content-page">
+        <div class="bg-white p-20">
+            <div class="bb-1 text-20 pb-10 mb-30"><b>书籍分类</b></div>
+            <section class="text-center table">
+                <div class="ub bg-purple-1 p-15">
+                    <div class="ub-f1">分类ID</div>
+                    <div class="ub-f1">分类名称</div>
+                </div>
+                <div style="min-height:60vh;max-height: 70vh;overflow-y: auto;">
+                    <template v-if="list&&list.length>0">
+                        <div v-for="item in list" class="ub p-tb-10 tr">
+                            <div class="ub-f1" v-text="item.book_type_id"></div>
+                            <div class="ub-f1" v-text="item.book_type_name"></div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <p class="p-30">没有检索出数据</p>
+                    </template>
+                </div>
+            </section>
+        </div>
     </div>
+    <script src="/static/js/book/bookType.js"></script>
 </body>
 </html>

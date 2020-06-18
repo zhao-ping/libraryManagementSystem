@@ -1,18 +1,26 @@
 "use strict";
 
 Vue.component('pager', {
-  props: ['totalPage', 'page'],
+  props: ['pageCount', 'page'],
   data: function data() {
     return {
       pages: []
     };
   },
   watch: {
-    totalPage: function totalPage() {
-      console.log(99);
+    page: function page() {
+      this.resetPager();
+    }
+  },
+  template: "\n    <section class=\"pager\">\n        <span v-for=\"item in pages\" @click=\"toPage(item.v)\" class=\"page\" :class=\"{'bg-purple-1':page==item.v}\" v-text=\"item.k\"></span>\n    </section>\n    ",
+  methods: {
+    toPage: function toPage(page) {
+      this.$emit("change", page);
+    },
+    resetPager: function resetPager() {
       this.pages = [];
 
-      if (page - 1 > 0) {
+      if (this.page - 1 > 0) {
         this.pages.push({
           k: "首页",
           v: 1
@@ -23,8 +31,8 @@ Vue.component('pager', {
         });
       }
 
-      for (var i = page - 2; i < page + 2; i++) {
-        if (i > 0 && i < this.totalPage) {
+      for (var i = this.page - 2; i <= this.page + 2; i++) {
+        if (i > 0 && i <= this.pageCount) {
           this.pages.push({
             k: i,
             v: i
@@ -32,18 +40,36 @@ Vue.component('pager', {
         }
       }
 
-      if (page + 1 < this.totalPage) {
+      if (this.page + 1 <= this.pageCount) {
         this.pages.push({
           k: "下一页",
           v: this.page + 1
         });
         this.pages.push({
           k: "尾页",
-          v: this.totalPage
+          v: this.pageCount
         });
       }
     }
   },
-  template: "\n    <section class=\"pager\">\n        <span class=\"page\">\u9996\u9875</span>\n        <span class=\"page\">\u4E0A\u4E00\u9875</span>\n        <span class=\"page\">1</span>\n        <span class=\"page\">2</span>\n        <span class=\"page\">3</span>\n        <span class=\"page\">4</span>\n        <span class=\"page\">5</span>\n        <span class=\"page\">\u4E0B\u4E00\u9875</span>\n        <span class=\"page\">\u5C3E\u9875</span>\n    </section>\n    ",
-  methods: {}
+  created: function created() {
+    this.resetPager();
+  }
+});
+Vue.component("popup", {
+  props: [],
+  data: function data() {
+    return {
+      isShow: false
+    };
+  },
+  template: "\n    <div v-show=\"isShow\" class=\"modal\">\n        <div @click=\"hide\" class=\"bg\"></div>\n        <div class=\"contianer bg-white br-5\">\n            <slot></slot>\n        </div>\n    </div>\n    ",
+  methods: {
+    show: function show() {
+      this.isShow = true;
+    },
+    hide: function hide() {
+      this.isShow = false;
+    }
+  }
 });

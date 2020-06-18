@@ -34,7 +34,9 @@ func (c *StudentController) StudentList() {
 
 	var count int
 	db := conn.GetORM()
-	dbErr := db.Where(&student).Offset(page - 1).Limit(limit).Find(&students).Count(&count).Error
+	db.Where(&student).Find(&students).Count(&count)
+
+	dbErr := db.Where(&student).Order("created desc").Limit(limit).Offset((page - 1) * limit).Find(&students).Error
 
 	resData := models.ResData{
 		Code: 1,
@@ -56,7 +58,6 @@ func (c *StudentController) StudentList() {
 	c.ServeJSON()
 }
 func (c *StudentController) NewStudent() {
-
 	student_name := c.GetString("student_name", "")
 	student_major := c.GetString("student_major", "计算机科学与技术")
 	student_sex, _ := c.GetInt("student_sex", 0)
@@ -82,7 +83,7 @@ func (c *StudentController) NewStudent() {
 		AdminId: admin_id,
 	}
 	administrator := models.Administrator{}
-	adminErr := db.Where(&admin).First(&administrator)
+	adminErr := db.Where(&admin).First(&administrator).Error
 	if adminErr != nil {
 		resData.Code = 1
 		resData.Msg = "没有查到管理员"

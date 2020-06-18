@@ -6,8 +6,52 @@
 </head>
 <body>
     <<template "temp/sideMenu.html" .>>
-    <div class="content-page">
-        借阅列表
+    <div id="app" class="content-page">
+        <div class="bg-white p-30">
+            <div class="bb-1 text-20 pb-10 mb-30"><b>借阅列表</b></div>
+            <div class="ub ub-ac mb-30">
+                <p class="ub-f1"></p>
+                <input class="search" v-model.number="formData.book_id" type="text" placeholder="请输入书籍编号">
+                <input class="search" v-model.number="formData.book_name" type="text" placeholder="请输入书籍名称">
+                <input class="search" v-model="formData.student_id" type="text" placeholder="请输入学号">
+                <div @click="research()" class="btn ml-10">搜索</div>
+                <div @click="reset" class="btn ml-10">重置</div>
+            </div>
+            <section class="text-center table">
+                <div class="ub bg-purple-1 p-15">
+                    <div style="width: 40px;">编号</div>
+                    <div class="ub-f2">书籍</div>
+                    <div class="ub-f1">作者</div>
+                    <div class="ub-f1">借阅者</div>
+                    <div class="ub-f1">录入管理员</div>
+                    <div style="width: 100px;">借阅时间</div>
+                    <div style="width: 40px;">天数</div>
+                    <div style="width: 60px;">操作</div>
+                </div>
+                <div style="min-height:60vh;max-height: 70vh;overflow-y: auto;">
+                    <template v-if="list&&list.length>0">
+                        <div v-for="(item,index) in list" class="ub p-tb-10 tr">
+                            <div style="width: 40px;" v-text="item.borrow_id"></div>
+                            <div class="ub-f2" v-text="'《'+item.book_name+'》('+item.book_id+')'"></div>
+                            <div class="ub-f1" v-text="item.book_author"></div>
+                            <div class="ub-f1" v-text="item.student_name+'('+item.student_id+')'"></div>
+                            <div class="ub-f1" v-text="item.admin_name"></div>
+                            <div style="width: 100px;" v-text="formateDateTime(item.start_time)"></div>
+                            <div style="width: 40px;" v-text="item.borrow_days">天数</div>
+                            <div style="width: 60px;">
+                                <span v-if="item.borrow_state==0" class="btn small red">已还</span>
+                                <span v-else @click="backBook(item,index)" class="btn small green">归还</span>
+                            </div>
+                        </div>
+                    </template>
+                    <template v-else>
+                        <p class="p-30">没有检索出数据</p>
+                    </template>
+                </div>
+                <pager v-if="pager" :page="pager.page" @change="research" :page-count="pager.page_count"></pager>
+            </section>
+        </div>
     </div>
+    <script src="/static/js/borrow/borrowList.js"></script>
 </body>
 </html>

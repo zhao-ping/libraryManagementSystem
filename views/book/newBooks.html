@@ -2,12 +2,47 @@
 <html lang="en">
 <head>
     <<template "temp/baseFile.html" .>>
-    <title>新书入库</title>
+    <title>新生入库</title>
 </head>
 <body>
     <<template "temp/sideMenu.html" .>>
-    <div class="content-page">
-        新书入库
+    <div id="app" class="content-page">
+        <div class="bg-white p-20" style="min-height: 90vh;">
+            <div class="bb-1 text-20 pb-10"><b>新书入库</b></div>
+            <section style="width: 300px; margin: 0 auto;padding-top: 100px;">
+                <div class="mb-20 ub ub-a-center">
+                    <p class="mr-10">书名</p>
+                    <div class="ub-f1"><input v-model="formData.book_name" type="text" placeholder="请输入书名"></div>
+                </div>
+                <div class="mb-20 ub ub-a-center">
+                    <p class="mr-10">作者</p>
+                    <div class="ub-f1"><input v-model="formData.book_author" type="text" placeholder="请输入作者"></div>
+                </div>
+                <div class="mb-20 ub ub-a-center">
+                    <p class="mr-10">价格</p>
+                    <div class="ub-f1"><input v-model="formData.book_price" type="number" placeholder="请输入价格"></div>
+                </div>
+                <div class="mb-20 ub ub-a-center">
+                    <p class="mr-10">数量</p>
+                    <div class="ub-f1">
+                        <input v-model="formData.book_count" type="number" placeholder="请输入价入库数量">
+                    </div>
+                </div>
+                <div class="mb-20 ub ub-a-center">
+                    <p class="mr-10">分类</p>
+                    <div class="ub-f1">
+                        <select v-model.number="formData.book_type_id" placeholder="请选择图书分类">
+                            <option v-for="item in book_types" :value="item.book_type_id">{{item.book_type_name}}</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="text-center">
+                    <div @click="newBook" class="btn w-100">确定</div>
+                </div>
+            </section>
+        </div>
     </div>
+    <!-- <div class="toast">消息提示</div> -->
+    <script src="/static/js/book/newBook.js"></script>
 </body>
 </html>

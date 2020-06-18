@@ -3,7 +3,8 @@ axios.defaults.baseURL = 'http://localhost:8080/api/';
 // axios.defaults.headers.common['token'] = localStorage["token"];
 axios.defaults.timeout = 5000;
 
-axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8';
+// axios.defaults.headers.post['Content-Type'] = 'application/json; charset=utf-8';
+axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 /*
 list ：返回数据追加到列表上 list为字符串 配套使用listPage,listAllLoaded,listLoading
 resData:返回数据赋值给resData,resDara为赋值数据的名字 类型 str
@@ -19,8 +20,8 @@ function getData(url, t, {
         try {
             axios.request(url, {
                 method: method,
-                data: method.toLowerCase()!="get"?JSON.stringify(formData):null,
-                params: method.toLowerCase()=="get"?formData:null,
+                data:formData,
+                params:formData
             }).then((r) => {
                 let res = r.data;
                 if(res.code==0){
@@ -75,6 +76,37 @@ var vueExtends={
                 }
             }, everyTimer);
         }, duration);
+    },
+    $confirm(msg,{title="提示",message="这里是提示！"}={}){
+         return new Promise((resolve,reject)=>{
+            if (typeof msg=="string"){
+                message=msg;
+            }
+            let confirm=document.createElement("div");
+            confirm.className="modal";
+            confirm.innerHTML=`<div id="confirmBg" class="bg"></div>
+            <div class="contianer confirm bg-white text-center br-5">
+                <section class="p-30">
+                    <div class="pb-20 text-20"><b>${title}</b></div>
+                    <p class="line-h-28 text-16 color-grey">${message}</p>
+                </section>
+                <div class="p-10 ub ub-ac">
+                    <div id="cancel" class="btn grey ub-f1 mr-15">取消</div>
+                    <div id="confirm" class="btn ub-f1">确定</div>
+                </div>
+            </div>`;
+            document.body.appendChild(confirm)
+            document.getElementById("cancel").onclick=()=>{
+                document.body.removeChild(confirm);
+            }
+            document.getElementById("confirmBg").onclick=()=>{
+                document.body.removeChild(confirm);
+            }
+            document.getElementById("confirm").onclick=()=>{
+                document.body.removeChild(confirm);
+                resolve("confirm");
+            }
+        })
     }
 }
 Object.assign(Vue.prototype,vueExtends);
