@@ -78,6 +78,12 @@ func (c *Borrow) TableName() string {
 	return "borrow"
 }
 
+type BorrowTypeCount struct {
+	Count        int    `gorm:"column:count" json:"count"`
+	BookTypeId   int    `gorm:"column:book_type_id" json:"book_type_id"`
+	BookTypeName string `gorm:"column:book_type_name" json:"book_type_name"`
+}
+
 type ResData struct {
 	Code int         `json:"code"` //0:成功，1：错误并提示
 	Msg  string      `json:"msg"`

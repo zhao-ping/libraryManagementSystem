@@ -34,7 +34,7 @@ var app = new Vue({
 
       this.borrowInfo.book_id = this.list[this.currentBookIndex].book_id;
       var formData = this.borrowInfo;
-      getData("/borrow", this, {
+      getData("/admin/borrow", this, {
         method: "post",
         formData: formData
       }).then(function (r) {
@@ -53,7 +53,7 @@ var app = new Vue({
         var formData = {
           book_id: book.book_id
         };
-        getData("/book/delete", _this2, {
+        getData("/admin/book/delete", _this2, {
           method: "delete",
           formData: formData
         }).then(function (r) {
@@ -73,7 +73,7 @@ var app = new Vue({
     getList: function getList() {
       var _this3 = this;
 
-      getData('/book/list', this, {
+      getData('/admin/book/list', this, {
         formData: this.formData
       }).then(function (r) {
         _this3.list = r.list;

@@ -39,3 +39,11 @@ func (c *MainController) Borrows() {
 func (c *MainController) TimeoutList() {
 	c.TplName = "borrow/timeoutList.html"
 }
+
+// 图表
+func (c *MainController) ChartBorrowTypeCount() {
+	c.TplName = "chart/borrowTypeCount.html"
+}
+func (c *MainController) ChartBorrowTime() {
+	c.TplName = "chart/borrowTime.html"
+}

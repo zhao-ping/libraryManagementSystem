@@ -15,12 +15,12 @@ var app=new Vue({
     },
     methods:{
         getBookTypes(){
-            getData('/book/type/list',this,{formData:this.formData}).then(r=>{
+            getData('/admin/book/type/list',this,{formData:this.formData}).then(r=>{
                 this.book_types=r;
             })
         },
         newBook(){
-            getData('/book/new',this,{method:"post",formData:this.formData}).then(r=>{
+            getData('/admin/book/new',this,{method:"post",formData:this.formData}).then(r=>{
                 this.$toast("新书入库成功");
             })
         }

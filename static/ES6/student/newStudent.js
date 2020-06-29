@@ -13,7 +13,7 @@ var app=new Vue({
     },
     methods:{
         newStudent(){
-            getData('/student/new',this,{method:"post",formData:this.formData}).then(r=>{
+            getData('/admin/student/new',this,{method:"post",formData:this.formData}).then(r=>{
                 this.$toast("新生入库成功");
             })
         }

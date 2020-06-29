@@ -22,7 +22,7 @@ var app=new Vue({
             this.getList();
         },
         getList(){
-            getData('/student/list',this,{formData:this.formData}).then(r=>{
+            getData('/admin/student/list',this,{formData:this.formData}).then(r=>{
                 this.list=r.list;
                 this.pager=r.pager;
             })

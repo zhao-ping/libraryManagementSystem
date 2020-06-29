@@ -7,7 +7,7 @@ var app=new Vue({
     },
     methods:{
         getList(){
-            getData('/book/type/list',this,{formData:this.formData}).then(r=>{
+            getData('/admin/book/type/list',this,{formData:this.formData}).then(r=>{
                 this.list=r
             })
         }

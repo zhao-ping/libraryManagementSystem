@@ -11,7 +11,7 @@ var app = new Vue({
     getList: function getList() {
       var _this = this;
 
-      getData('/book/type/list', this, {
+      getData('/admin/book/type/list', this, {
         formData: this.formData
       }).then(function (r) {
         _this.list = r;

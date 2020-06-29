@@ -47,7 +47,7 @@ var app=new Vue({
             this.getList();
         },
         getList(){
-            getData('/borrow/list/timeout',this,{formData:this.formData}).then(r=>{
+            getData('/admin/borrow/list/timeout',this,{formData:this.formData}).then(r=>{
                 this.list=r.list;
                 this.pager=r.pager;
             })

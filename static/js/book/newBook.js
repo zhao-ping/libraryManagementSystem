@@ -19,7 +19,7 @@ var app = new Vue({
     getBookTypes: function getBookTypes() {
       var _this = this;
 
-      getData('/book/type/list', this, {
+      getData('/admin/book/type/list', this, {
         formData: this.formData
       }).then(function (r) {
         _this.book_types = r;
@@ -28,7 +28,7 @@ var app = new Vue({
     newBook: function newBook() {
       var _this2 = this;
 
-      getData('/book/new', this, {
+      getData('/admin/book/new', this, {
         method: "post",
         formData: this.formData
       }).then(function (r) {

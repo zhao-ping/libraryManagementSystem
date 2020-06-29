@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"time"
 
+	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/auth"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/base"
 
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/conn"
@@ -63,7 +64,6 @@ func (c *StudentController) NewStudent() {
 	student_sex, _ := c.GetInt("student_sex", 0)
 	student_age, _ := c.GetInt("student_age", 20)
 	student_grade, _ := c.GetInt("student_grade", 1)
-	admin_id, _ := c.GetInt("admin_id", 1)
 
 	if student_name == "" {
 		resData := models.ResData{
@@ -79,27 +79,15 @@ func (c *StudentController) NewStudent() {
 	resData := models.ResData{}
 	db := conn.GetORM()
 
-	admin := models.Administrator{
-		AdminId: admin_id,
-	}
-	administrator := models.Administrator{}
-	adminErr := db.Where(&admin).First(&administrator).Error
-	if adminErr != nil {
-		resData.Code = 1
-		resData.Msg = "没有查到管理员"
-		resData.Data = nil
-		c.Data["json"] = resData
-		c.ServeJSON()
-		return
-	}
+	admin := auth.GetAdminFromToken(c.Ctx)
 	student := models.Student{
 		StudentName:  student_name,
 		StudentGrade: student_grade,
 		StudentMajor: student_major,
 		StudentAge:   student_age,
 		StudentSex:   student_sex,
-		AdminId:      admin_id,
-		AdminName:    administrator.AdminName,
+		AdminId:      admin.AdminId,
+		AdminName:    admin.AdminName,
 		Created:      time.Now().Unix(),
 	}
 

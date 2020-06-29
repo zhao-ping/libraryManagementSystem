@@ -29,7 +29,7 @@ var app=new Vue({
             }
             this.borrowInfo.book_id=this.list[this.currentBookIndex].book_id;
             let formData=this.borrowInfo;
-            getData(`/borrow`,this,{method:"post",formData}).then(r=>{
+            getData(`/admin/borrow`,this,{method:"post",formData}).then(r=>{
                 this.$toast("图书借出成功！");
                 this.list[this.currentBookIndex].borrow_state=1;
                 this.$refs["popupBorrow"].hide();
@@ -41,7 +41,7 @@ var app=new Vue({
                 let formData={
                     book_id:book.book_id
                 }
-                getData("/book/delete",this,{method:"delete",formData}).then(r=>{
+                getData("/admin/book/delete",this,{method:"delete",formData}).then(r=>{
                     this.list[bookIndex].delete_state=1;
                 })
             })
@@ -56,7 +56,7 @@ var app=new Vue({
             this.getList();
         },
         getList(){
-            getData('/book/list',this,{formData:this.formData}).then(r=>{
+            getData('/admin/book/list',this,{formData:this.formData}).then(r=>{
                 this.list=r.list;
                 this.pager=r.pager;
             })

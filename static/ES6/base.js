@@ -1,5 +1,37 @@
+function setCookie(name, value) { 
+    var exp = new Date(); 
+    exp.setTime(exp.getTime() + 60 * 60 * 24 * 1000); 
+    document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString() + ";path=/"; 
+}
+//读取cookies 
+function getCookie(name) { 
+    var arr, reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)"); 
+
+    if (arr = document.cookie.match(reg)) 
+
+        return unescape(arr[2]); 
+    else 
+        return null; 
+}
+//删除cookies 
+function delCookie(name) {
+    var exp = new Date(); 
+    exp.setTime(exp.getTime() - 60 * 60 * 24 * 1000); 
+    var cval = getCookie(name); 
+    if (cval != null) 
+        document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString() + ";path=/"; 
+}
+function logout(){
+    delCookie("admin");
+    location.href="/login";
+}
 // axios请求
 axios.defaults.baseURL = 'http://localhost:8080/api/';
+let adminCookie=getCookie("admin")
+if(adminCookie){
+    console.log(adminCookie)
+    axios.defaults.headers.common['token'] = adminCookie;
+}
 // axios.defaults.headers.common['token'] = localStorage["token"];
 axios.defaults.timeout = 5000;
 
@@ -25,9 +57,14 @@ function getData(url, t, {
             }).then((r) => {
                 let res = r.data;
                 if(res.code==0){
+                    // 成功
                     resolve(res.data);
                 }else if(res.code==1){
+                    // 提示错误信息
                     t.$toast(res.msg);
+                }else if(res.code==2){
+                    // 用户未登录
+                    location.href="/login"
                 }
                 
             }).catch(error=>{

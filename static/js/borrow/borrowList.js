@@ -22,7 +22,7 @@ var app = new Vue({
         var formData = {
           borrow_id: borrow.borrow_id
         };
-        getData("/borrow/back", _this, {
+        getData("/admin/borrow/back", _this, {
           method: "put",
           formData: formData
         }).then(function (r) {
@@ -42,7 +42,7 @@ var app = new Vue({
     getList: function getList() {
       var _this2 = this;
 
-      getData('/borrow/list', this, {
+      getData('/admin/borrow/list', this, {
         formData: this.formData
       }).then(function (r) {
         _this2.list = r.list;

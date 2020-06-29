@@ -1,6 +1,37 @@
 "use strict";
 
+function setCookie(name, value) {
+  var exp = new Date();
+  exp.setTime(exp.getTime() + 60 * 60 * 24 * 1000);
+  document.cookie = name + "=" + escape(value) + ";expires=" + exp.toGMTString() + ";path=/";
+}
+
+function getCookie(name) {
+  var arr,
+      reg = new RegExp("(^| )" + name + "=([^;]*)(;|$)");
+  if (arr = document.cookie.match(reg)) return unescape(arr[2]);else return null;
+}
+
+function delCookie(name) {
+  var exp = new Date();
+  exp.setTime(exp.getTime() - 60 * 60 * 24 * 1000);
+  var cval = getCookie(name);
+  if (cval != null) document.cookie = name + "=" + cval + ";expires=" + exp.toGMTString() + ";path=/";
+}
+
+function logout() {
+  delCookie("admin");
+  location.href = "/login";
+}
+
 axios.defaults.baseURL = 'http://localhost:8080/api/';
+var adminCookie = getCookie("admin");
+
+if (adminCookie) {
+  console.log(adminCookie);
+  axios.defaults.headers.common['token'] = adminCookie;
+}
+
 axios.defaults.timeout = 5000;
 axios.defaults.headers.post['Content-Type'] = 'application/x-www-form-urlencoded';
 
@@ -26,6 +57,8 @@ function getData(url, t) {
           resolve(res.data);
         } else if (res.code == 1) {
           t.$toast(res.msg);
+        } else if (res.code == 2) {
+          location.href = "/login";
         }
       })["catch"](function (error) {
         if (error.message.indexOf("timeout") != -1) {

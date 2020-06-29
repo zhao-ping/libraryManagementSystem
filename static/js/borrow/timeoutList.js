@@ -59,7 +59,7 @@ var app = new Vue({
     getList: function getList() {
       var _this = this;
 
-      getData('/borrow/list/timeout', this, {
+      getData('/admin/borrow/list/timeout', this, {
         formData: this.formData
       }).then(function (r) {
         _this.list = r.list;

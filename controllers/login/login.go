@@ -1,6 +1,8 @@
 package login
 
 import (
+	"encoding/base64"
+	"encoding/json"
 	"fmt"
 
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/conn"
@@ -14,10 +16,10 @@ type LoginController struct {
 }
 
 func (c *LoginController) Login() {
-	name := c.GetString("name")
+	admin_name := c.GetString("admin_name")
 	password := c.GetString("password")
 	admin := models.Administrator{
-		AdminName: name,
+		AdminName: admin_name,
 		Password:  password,
 	}
 
@@ -36,9 +38,19 @@ func (c *LoginController) Login() {
 	}
 
 	c.SetSession("admin", administrator)
-
 	resData.Code = 0
 	resData.Msg = "登录成功"
+
+	admin_json, _ := json.Marshal(&administrator)
+
+	token := base64.StdEncoding.EncodeToString(admin_json)
+
+	resData.Data = token
 	c.Data["json"] = resData
 	c.ServeJSON()
+}
+
+func (c *LoginController) Logout() {
+	c.DelSession("admin")
+	c.Redirect("/login", 302)
 }

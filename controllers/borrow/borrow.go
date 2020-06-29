@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/auth"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/base"
 
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/conn"
@@ -115,13 +116,11 @@ func (c *BorrowController) Borrow() {
 	student_id, _ := c.GetInt("student_id", 0)
 	book_id, _ := c.GetInt("book_id", 0)
 	borrow_days, _ := c.GetInt64("borrow_days", 0)
-	admin_id, _ := c.GetInt("admint_id", 1)
 
 	db := conn.GetORM()
 	resData := models.ResData{}
 	var student models.Student
 	var book models.Book
-	var admin models.Administrator
 	// 查询借阅学生
 	studentErr := db.Table("student").Where(fmt.Sprintf("student_id=%d", student_id)).First(&student).Error
 	if studentErr != nil {
@@ -140,8 +139,6 @@ func (c *BorrowController) Borrow() {
 		c.ServeJSON()
 		return
 	}
-	fmt.Println("borrow book")
-	fmt.Println(book)
 	if book.BorrowState == 1 || book.DeletState == 1 {
 		resData.Code = 1
 		if book.BorrowState == 1 {
@@ -155,14 +152,7 @@ func (c *BorrowController) Borrow() {
 		return
 	}
 	// 查询录入管理员
-	adminErr := db.Table("administrator").Where(fmt.Sprintf("admin_id=%d", admin_id)).First(&admin).Error
-	if adminErr != nil {
-		resData.Code = 1
-		resData.Msg = "没有检索到管理员"
-		c.Data["json"] = resData
-		c.ServeJSON()
-		return
-	}
+	admin := auth.GetAdminFromToken(c.Ctx)
 	// 改写图书状态
 	bookStateErr := db.Table("book").Where(fmt.Sprintf("book_id=%d", book_id)).Update("borrow_state", 1).Error
 	if bookStateErr != nil {

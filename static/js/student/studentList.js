@@ -26,7 +26,7 @@ var app = new Vue({
     getList: function getList() {
       var _this = this;
 
-      getData('/student/list', this, {
+      getData('/admin/student/list', this, {
         formData: this.formData
       }).then(function (r) {
         _this.list = r.list;

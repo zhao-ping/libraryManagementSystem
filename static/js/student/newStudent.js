@@ -17,7 +17,7 @@ var app = new Vue({
     newStudent: function newStudent() {
       var _this = this;
 
-      getData('/student/new', this, {
+      getData('/admin/student/new', this, {
         method: "post",
         formData: this.formData
       }).then(function (r) {

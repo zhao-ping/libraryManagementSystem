@@ -18,7 +18,7 @@ var app=new Vue({
                  let formData={
                     borrow_id:borrow.borrow_id
                 }
-                getData(`/borrow/back`,this,{method:"put",formData}).then(r=>{
+                getData(`/admin/borrow/back`,this,{method:"put",formData}).then(r=>{
                     this.list[bookIndex].borrow_state=0;
                 })
             })
@@ -33,7 +33,7 @@ var app=new Vue({
             this.getList();
         },
         getList(){
-            getData('/borrow/list',this,{formData:this.formData}).then(r=>{
+            getData('/admin/borrow/list',this,{formData:this.formData}).then(r=>{
                 this.list=r.list;
                 this.pager=r.pager;
             })

@@ -5,6 +5,7 @@ import (
 	"strconv"
 	"time"
 
+	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/auth"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/base"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/conn"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/models"
@@ -65,7 +66,6 @@ func (c *BookController) NewBook() {
 	book_price, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", book_price), 64)
 	book_type_id, _ := c.GetInt("book_type_id", 0)
 	book_count, _ := c.GetInt("book_count", 1)
-	admin_id, _ := c.GetInt("admin_id", 1)
 	resData := models.ResData{
 		Code: 1,
 		Msg:  "请按照要求输入必填信息",
@@ -90,15 +90,15 @@ func (c *BookController) NewBook() {
 	db := conn.GetORM()
 	var book_type models.BookType
 	db.First(&book_type, book_type_id)
-	var admin models.Administrator
-	db.First(&admin, admin_id)
+
+	admin := auth.GetAdminFromToken(c.Ctx)
 	book := models.Book{
 		BookName:     book_name,
 		BookPrice:    book_price,
 		BookAuthor:   book_author,
 		BookTypeId:   book_type_id,
 		BookTypeName: book_type.BookTypeName,
-		AdminId:      admin_id,
+		AdminId:      admin.AdminId,
 		AdminName:    admin.AdminName,
 		Created:      time.Now().Unix(),
 	}
