@@ -58,6 +58,8 @@ func OutputSuccess(c *context.Context, data interface{}) {
 		Msg:  "success",
 		Data: data,
 	}
+	fmt.Println("resData------")
+	fmt.Println(resData)
 	c.Output.JSON(resData, false, false)
 }
 func GetAdminFromToken(c *context.Context) models.Administrator {
