@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <<template "temp/baseFile.html" .>>
+    <script src="/static/js/z-chart.js"></script>
+    <title>最受欢迎的书籍</title>
+</head>
+<body>
+    <<template "temp/sideMenu.html" .>>
+    <div id="app" class="content-page">
+        <div class="bg-white p-30">
+            <div class="bb-1 text-20 pb-10 mb-30"><b>最受欢迎的书籍</b></div>
+            <div class="ub">
+                <section class="text-center ub-f1 table">
+                    <div class="ub bg-purple-1 p-15">
+                        <div class="ub-f2">书籍</div>
+                        <div class="ub-f1">借阅量</div>
+                    </div>
+                    <div>
+                        <template v-if="info&&info.length>0">
+                            <div v-for="item in info" class="ub p-tb-10 tr">
+                                <div class="ub-f2" v-text="'《'+item.book_name+'》'+item.book_author"></div>
+                                <div class="ub-f1 text-center" v-text="item.count"></div>
+                            </div>
+                        </template>
+                        <template v-else>
+                            <p class="p-30">没有检索出数据</p>
+                        </template>
+                    </div>
+                </section>
+                <section class="ub-f2 ml-20"><div id="chart"></div></section>
+            </div>
+        </div>
+    </div>
+    <script src="/static/js/chart/mostPopularBooks.js"></script>
+</body>
+</html>

@@ -84,6 +84,21 @@ type BorrowTypeCount struct {
 	BookTypeName string `gorm:"column:book_type_name" json:"book_type_name"`
 }
 
+type PopularBook struct {
+	Count      int     `gorm:"column:count" json:"count"`
+	BookName   string  `gorm:"column:book_name" json:"book_name"`
+	BookAuthor string  `gorm:"column:book_author" json:"book_author"`
+	BookPrice  float64 `gorm:"column:book_price" json:"book_price"`
+}
+
+type PopularBookTime struct {
+	XAxis  []string         `gorm:"column:a_axis" json:"a_axis"`
+	Series []SingleBookTime `gorm:"column:a_axis" json:"a_axis"`
+}
+type SingleBookTime struct {
+	Name string `gorm:"column:name" json:"name"`
+	Data []int  `gorm:"column:data" json:"data"`
+}
 type ResData struct {
 	Code int         `json:"code"` //0:成功，1：错误并提示
 	Msg  string      `json:"msg"`

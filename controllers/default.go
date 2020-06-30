@@ -47,3 +47,6 @@ func (c *MainController) ChartBorrowTypeCount() {
 func (c *MainController) ChartBorrowTime() {
 	c.TplName = "chart/borrowTime.html"
 }
+func (c *MainController) MostPopularBooks() {
+	c.TplName = "chart/mostPopularBooks.html"
+}

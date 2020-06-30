@@ -32,6 +32,7 @@ func init() {
 	// 图表
 	beego.Router("/chart/borrow_type_count", &controllers.MainController{}, "get:ChartBorrowTypeCount")
 	beego.Router("/chart/borrow_time", &controllers.MainController{}, "get:ChartBorrowTime")
+	beego.Router("/chart/most_popular_books", &controllers.MainController{}, "get:MostPopularBooks")
 
 	// API
 	ns := beego.NewNamespace("/api",
@@ -56,6 +57,7 @@ func init() {
 			beego.NSNamespace("/chart",
 				beego.NSRouter("/borrow_type", &chart.ChartController{}, "get:BorrowTypeCount"),
 				beego.NSRouter("/borrow_time", &chart.ChartController{}, "get:BorrowTime"),
+				beego.NSRouter("/most_popular_books", &chart.ChartController{}, "get:MostPopularBooks"),
 			),
 		),
 	)
