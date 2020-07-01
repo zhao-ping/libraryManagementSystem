@@ -93,7 +93,7 @@ type PopularBook struct {
 
 type PopularBookTime struct {
 	XAxis  []string         `gorm:"column:a_axis" json:"a_axis"`
-	Series []SingleBookTime `gorm:"column:a_axis" json:"a_axis"`
+	Series []SingleBookTime `gorm:"column:series" json:"series"`
 }
 type SingleBookTime struct {
 	Name string `gorm:"column:name" json:"name"`

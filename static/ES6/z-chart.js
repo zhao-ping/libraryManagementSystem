@@ -1,6 +1,7 @@
+const colors=["#FD7A4F","#FDD764","#7359C3","#42C288","#92E98E","#2E8AE6","#44C0EA","#3C52C9","#4Dd62196","#ff679b","#fa5c7c","#0acf97","#02a8b5","#39afd1","#727cf5","#727cf5","#6b5eae"];
 class lineChart{
     constructor(id,{title="",series=[],xAxis={data:[]}}){
-        this.colors=["#FD7A4F","#FDD764","#7359C3","#42C288","#92E98E","#2E8AE6","#44C0EA","#3C52C9","#4Dd62196"];
+        this.colors=colors;
         const box= document.getElementById(id);
         box.innerHTML="";
         this.c=document.createElement("canvas");
@@ -64,7 +65,7 @@ class lineChart{
         const min=Math.min(...allData);
         const max=Math.max(...allData);
         this.everyHeight=(this.lineBottom-this.lineTop)/(max-min);
-        const stepNum=(max-min)/5;
+        const stepNum=Math.ceil((max-min)/5);
         const stepHeight=(this.lineBottom-this.lineTop)/4;
         this.context.textAlign='right';
         this.context.textBaseline='middle';
@@ -161,7 +162,7 @@ class lineChart{
 }
 class barChart{
     constructor(id,{title="",type="vertical", series=[],xAxis={data:[]}}){
-        this.colors=["#FD7A4F","#FDD764","#7359C3","#42C288","#92E98E","#2E8AE6","#44C0EA","#3C52C9","#4Dd62196"];
+        this.colors=colors;
         const box= document.getElementById(id);
         box.innerHTML="";
         this.c=document.createElement("canvas");
@@ -285,7 +286,7 @@ class barChart{
                 const x=this.left;
                 const y=this.left+this.everyHeight*(n+0.1-1)+barHeight*i;
                 this.context.beginPath();
-                this.context.rect(x,y,barWidth,barHeight);
+                this.context.rect(x,y-this.everyHeight*0.8/2,barWidth,barHeight);
                 this.context.fill();
             }
         });
@@ -310,7 +311,7 @@ class barChart{
         const min=Math.min(...allData);
         const max=Math.max(...allData);
         this.everyHeight=(this.lineBottom-this.lineTop)/(max-min);
-        const stepNum=(max-min)/5;
+        const stepNum=Math.ceil((max-min)/5);
         const stepHeight=(this.lineBottom-this.lineTop)/4;
         this.context.textAlign='right';
         // 纵坐标标记
@@ -339,7 +340,7 @@ class barChart{
 
 class pieChart {
     constructor(id, {data,title,type="circle",defalutIndex,callback}) {
-        this.colors=["#FD7A4F","#FDD764","#7359C3","#42C288","#92E98E","#2E8AE6","#44C0EA","#3C52C9","#4Dd62196"];
+        this.colors=colors;
         const box= document.getElementById(id);
         box.innerHTML="";
         this.c=document.createElement("canvas");
@@ -484,7 +485,7 @@ class pieChart {
 
 class radarChart {
     constructor(id, {data,title,axis,defalutIndex=0,callback}) {
-        this.colors=["#FD7A4F","#FDD764","#7359C3","#42C288","#92E98E","#2E8AE6","#44C0EA","#3C52C9","#4Dd62196"];
+        this.colors=colors;
         const box= document.getElementById(id);
         box.innerHTML="";
         this.c=document.createElement("canvas");
@@ -661,7 +662,7 @@ class radarChart {
 
 class scatterChart {
     constructor(id, {title,xTag="",xTagNum=5,yTag="",yTagNum=5,symbolSize,series,type="scatter"}) {
-        this.colors=["#FD7A4F","#FDD764","#7359C3","#42C288","#92E98E","#2E8AE6","#44C0EA","#3C52C9","#4Dd62196"];
+        this.colors=colors;
         const box= document.getElementById(id);
         box.innerHTML="";
         this.c=document.createElement("canvas");

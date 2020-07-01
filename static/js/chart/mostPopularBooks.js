@@ -27,7 +27,7 @@ var app = new Vue({
       var xData = [];
       var nums = [];
       this.info.map(function (item) {
-        xData.push(item.book_name.length < 4 ? item.book_name : item.book_name.substring(0, 6));
+        xData.push(item.book_name.length < 4 ? item.book_name : item.book_name.substring(0, 3) + '...');
         nums.push(item.count);
       });
       var lineChartOption = {
@@ -41,10 +41,10 @@ var app = new Vue({
         series: [{
           name: '最受欢迎的图书',
           data: nums,
-          type: 'line'
+          type: 'area'
         }]
       };
-      new barChart("chart", _objectSpread(_objectSpread({}, lineChartOption), {}, {
+      new lineChart("chart", _objectSpread(_objectSpread({}, lineChartOption), {}, {
         type: "horizon"
       }));
     }

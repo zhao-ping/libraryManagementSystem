@@ -3,8 +3,8 @@ package login
 import (
 	"encoding/base64"
 	"encoding/json"
-	"fmt"
 
+	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/auth"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/conn"
 	"git.zituo.net/zhaoping/LibraryManagementSystem/models"
 
@@ -27,27 +27,16 @@ func (c *LoginController) Login() {
 	db := conn.GetORM()
 	dbErr := db.Where(&admin).First(&administrator).Error
 
-	var resData models.ResData
 	if dbErr != nil {
-		fmt.Println(dbErr)
-		resData.Code = 1
-		resData.Msg = "您的用户名或者密码错误！"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "您的用户名或者密码错误！")
 		return
 	}
-
-	c.SetSession("admin", administrator)
-	resData.Code = 0
-	resData.Msg = "登录成功"
 
 	admin_json, _ := json.Marshal(&administrator)
 
 	token := base64.StdEncoding.EncodeToString(admin_json)
 
-	resData.Data = token
-	c.Data["json"] = resData
-	c.ServeJSON()
+	auth.OutputSuccess(c.Ctx, token)
 }
 
 func (c *LoginController) Logout() {

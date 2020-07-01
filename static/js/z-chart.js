@@ -24,6 +24,8 @@ function _defineProperties(target, props) { for (var i = 0; i < props.length; i+
 
 function _createClass(Constructor, protoProps, staticProps) { if (protoProps) _defineProperties(Constructor.prototype, protoProps); if (staticProps) _defineProperties(Constructor, staticProps); return Constructor; }
 
+var colors = ["#FD7A4F", "#FDD764", "#7359C3", "#42C288", "#92E98E", "#2E8AE6", "#44C0EA", "#3C52C9", "#4Dd62196", "#ff679b", "#fa5c7c", "#0acf97", "#02a8b5", "#39afd1", "#727cf5", "#727cf5", "#6b5eae"];
+
 var lineChart = function () {
   function lineChart(id, _ref) {
     var _ref$title = _ref.title,
@@ -37,7 +39,7 @@ var lineChart = function () {
 
     _classCallCheck(this, lineChart);
 
-    this.colors = ["#FD7A4F", "#FDD764", "#7359C3", "#42C288", "#92E98E", "#2E8AE6", "#44C0EA", "#3C52C9", "#4Dd62196"];
+    this.colors = colors;
     var box = document.getElementById(id);
     box.innerHTML = "";
     this.c = document.createElement("canvas");
@@ -108,7 +110,7 @@ var lineChart = function () {
       var min = Math.min.apply(Math, _toConsumableArray(allData));
       var max = Math.max.apply(Math, _toConsumableArray(allData));
       this.everyHeight = (this.lineBottom - this.lineTop) / (max - min);
-      var stepNum = (max - min) / 5;
+      var stepNum = Math.ceil((max - min) / 5);
       var stepHeight = (this.lineBottom - this.lineTop) / 4;
       this.context.textAlign = 'right';
       this.context.textBaseline = 'middle';
@@ -253,7 +255,7 @@ var barChart = function () {
 
     _classCallCheck(this, barChart);
 
-    this.colors = ["#FD7A4F", "#FDD764", "#7359C3", "#42C288", "#92E98E", "#2E8AE6", "#44C0EA", "#3C52C9", "#4Dd62196"];
+    this.colors = colors;
     var box = document.getElementById(id);
     box.innerHTML = "";
     this.c = document.createElement("canvas");
@@ -398,7 +400,7 @@ var barChart = function () {
 
           _this3.context.beginPath();
 
-          _this3.context.rect(x, y, barWidth, barHeight);
+          _this3.context.rect(x, y - _this3.everyHeight * 0.8 / 2, barWidth, barHeight);
 
           _this3.context.fill();
         }
@@ -429,7 +431,7 @@ var barChart = function () {
       var min = Math.min.apply(Math, _toConsumableArray(allData));
       var max = Math.max.apply(Math, _toConsumableArray(allData));
       this.everyHeight = (this.lineBottom - this.lineTop) / (max - min);
-      var stepNum = (max - min) / 5;
+      var stepNum = Math.ceil((max - min) / 5);
       var stepHeight = (this.lineBottom - this.lineTop) / 4;
       this.context.textAlign = 'right';
 
@@ -478,7 +480,7 @@ var pieChart = function () {
 
     _classCallCheck(this, pieChart);
 
-    this.colors = ["#FD7A4F", "#FDD764", "#7359C3", "#42C288", "#92E98E", "#2E8AE6", "#44C0EA", "#3C52C9", "#4Dd62196"];
+    this.colors = colors;
     var box = document.getElementById(id);
     box.innerHTML = "";
     this.c = document.createElement("canvas");
@@ -677,7 +679,7 @@ var radarChart = function () {
 
     _classCallCheck(this, radarChart);
 
-    this.colors = ["#FD7A4F", "#FDD764", "#7359C3", "#42C288", "#92E98E", "#2E8AE6", "#44C0EA", "#3C52C9", "#4Dd62196"];
+    this.colors = colors;
     var box = document.getElementById(id);
     box.innerHTML = "";
     this.c = document.createElement("canvas");
@@ -952,7 +954,7 @@ var scatterChart = function () {
 
     _classCallCheck(this, scatterChart);
 
-    this.colors = ["#FD7A4F", "#FDD764", "#7359C3", "#42C288", "#92E98E", "#2E8AE6", "#44C0EA", "#3C52C9", "#4Dd62196"];
+    this.colors = colors;
     var box = document.getElementById(id);
     box.innerHTML = "";
     this.c = document.createElement("canvas");

@@ -39,25 +39,17 @@ func (c *BookController) BookList() {
 	db.Where(&book).Find(&books).Count(&count)
 
 	dbErr := db.Table("book").Where(book_sql).Order("created desc").Order("borrow_state asc").Limit(limit).Offset((page - 1) * limit).Find(&books).Error
-
-	resData := models.ResData{
-		Code: 1,
-		Msg:  "查询失败",
-		Data: nil,
-	}
 	if dbErr == nil {
 		pager := base.GetPager(page, limit, count)
 		list := models.List{
 			Pager: pager,
 			List:  books,
 		}
-		resData.Code = 0
-		resData.Msg = "success"
-		resData.Data = list
+		auth.OutputSuccess(c.Ctx, list)
+	} else {
+		auth.OutputErr(c.Ctx, 1, "查询失败")
 	}
 
-	c.Data["json"] = resData
-	c.ServeJSON()
 }
 func (c *BookController) NewBook() {
 	book_name := c.GetString("book_name", "")
@@ -66,26 +58,21 @@ func (c *BookController) NewBook() {
 	book_price, _ = strconv.ParseFloat(fmt.Sprintf("%.2f", book_price), 64)
 	book_type_id, _ := c.GetInt("book_type_id", 0)
 	book_count, _ := c.GetInt("book_count", 1)
-	resData := models.ResData{
-		Code: 1,
-		Msg:  "请按照要求输入必填信息",
-	}
+	var Msg string
 	if book_name == "" || book_author == "" || book_price == 0 || book_type_id == 0 {
 		if book_name == "" {
-			resData.Msg = "请输入书名"
+			Msg = "请输入书名"
 		}
 		if book_author == "" {
-			resData.Msg = "请输入作者"
+			Msg = "请输入作者"
 		}
 		if book_type_id == 0 {
-			resData.Msg = "请输入图书类型"
+			Msg = "请输入图书类型"
 		}
 		if book_price == 0 {
-			resData.Msg = "请输入价格"
+			Msg = "请输入价格"
 		}
-		c.Data["json"] = resData
-		c.ServeJSON()
-		return
+		auth.OutputErr(c.Ctx, 1, Msg)
 	}
 	db := conn.GetORM()
 	var book_type models.BookType
@@ -114,46 +101,30 @@ func (c *BookController) NewBook() {
 		}
 	}
 	if err_count > 0 {
-		resData.Code = 1
-		resData.Msg = fmt.Sprintf("%d本书入库成功，%d本书入库失败", book_count-err_count, err_count)
+		auth.OutputErr(c.Ctx, 1, fmt.Sprintf("%d本书入库成功，%d本书入库失败", book_count-err_count, err_count))
 	} else {
-		resData.Code = 1
-		resData.Msg = "新书入库成功"
+		auth.OutputErr(c.Ctx, 1, "新书入库成功")
 	}
-	c.Data["json"] = resData
-	c.ServeJSON()
 }
 func (c *BookController) BookTypeList() {
 	book_types := make([]models.BookType, 0)
 
 	db := conn.GetORM()
 	dbErr := db.Find(&book_types).Error
-	resData := models.ResData{
-		Code: 1,
-		Msg:  "error",
-	}
+
 	if dbErr == nil {
-		resData.Code = 0
-		resData.Msg = "success"
-		resData.Data = book_types
+		auth.OutputSuccess(c.Ctx, book_types)
+		return
 	}
-	c.Data["json"] = resData
-	c.ServeJSON()
+	auth.OutputErr(c.Ctx, 1, "数据查询出错")
 }
 
 func (c *BookController) DeletBook() {
 
 	book_id, _ := c.GetInt("book_id")
 
-	resData := models.ResData{
-		Code: 0,
-		Msg:  "success",
-	}
 	if book_id == 0 {
-		resData.Code = 1
-		resData.Msg = "没有传入图书ID"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "没有传入图书ID")
 		return
 	}
 	book := models.Book{
@@ -162,14 +133,8 @@ func (c *BookController) DeletBook() {
 	db := conn.GetORM()
 	deleteErr := db.Model(&book).Update("delete_state", 1).Error
 	if deleteErr != nil {
-		resData.Code = 1
-		resData.Msg = "处理出错，请重试！"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "处理出错，请重试")
 		return
 	}
-	resData.Code = 0
-	resData.Msg = "success"
-	c.Data["json"] = resData
-	c.ServeJSON()
+	auth.OutputSuccess(c.Ctx, nil)
 }

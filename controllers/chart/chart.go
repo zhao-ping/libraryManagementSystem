@@ -61,7 +61,7 @@ func (c *ChartController) BorrowTime() {
 	if borrowBooksErr != nil {
 		auth.OutputErr(c.Ctx, 1, "数据查询出错2")
 	}
-	borrow_book_time := models.PopularBookTime{}
+	var borrow_book_time models.PopularBookTime
 	borrow_book_time.XAxis = xaxis
 	serise := make([]models.SingleBookTime, book_count)
 	for i := len(most_popular_books) - 1; i >= 0; i-- {

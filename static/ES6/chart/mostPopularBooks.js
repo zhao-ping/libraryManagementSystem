@@ -16,7 +16,7 @@ let app=new Vue({
             let xData=[];
             let nums=[]
             this.info.map(item=>{
-                xData.push(item.book_name.length<4?item.book_name:item.book_name.substring(0,6))
+                xData.push(item.book_name.length<4?item.book_name:item.book_name.substring(0,3)+'...')
                 nums.push(item.count)
             })
             var lineChartOption = {
@@ -30,11 +30,11 @@ let app=new Vue({
                 series: [{
                     name: '最受欢迎的图书',
                     data: nums,
-                    type: 'line',//line or area
+                    type: 'area',//line or area
                 }]
             };
             //柱状图
-            new barChart("chart", {...lineChartOption,type:"horizon"});
+            new lineChart("chart", {...lineChartOption,type:"horizon"});
         }
     },
     created(){

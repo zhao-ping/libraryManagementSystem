@@ -1,7 +1,6 @@
 package student
 
 import (
-	"fmt"
 	"time"
 
 	"git.zituo.net/zhaoping/LibraryManagementSystem/controllers/auth"
@@ -39,24 +38,17 @@ func (c *StudentController) StudentList() {
 
 	dbErr := db.Where(&student).Order("created desc").Limit(limit).Offset((page - 1) * limit).Find(&students).Error
 
-	resData := models.ResData{
-		Code: 1,
-		Msg:  "查询失败",
-		Data: nil,
-	}
 	if dbErr == nil {
 		pager := base.GetPager(page, limit, count)
 		list := models.List{
 			Pager: pager,
 			List:  students,
 		}
-		resData.Code = 0
-		resData.Msg = "success"
-		resData.Data = list
+		auth.OutputSuccess(c.Ctx, list)
+	} else {
+		auth.OutputErr(c.Ctx, 1, "查询失败，请重试！")
 	}
 
-	c.Data["json"] = resData
-	c.ServeJSON()
 }
 func (c *StudentController) NewStudent() {
 	student_name := c.GetString("student_name", "")
@@ -66,17 +58,9 @@ func (c *StudentController) NewStudent() {
 	student_grade, _ := c.GetInt("student_grade", 1)
 
 	if student_name == "" {
-		resData := models.ResData{
-			Code: 1,
-			Msg:  "用户名必填",
-			Data: nil,
-		}
-		fmt.Println(resData)
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "用户名必填")
 		return
 	}
-	resData := models.ResData{}
 	db := conn.GetORM()
 
 	admin := auth.GetAdminFromToken(c.Ctx)
@@ -92,16 +76,11 @@ func (c *StudentController) NewStudent() {
 	}
 
 	dbErr := db.Create(&student).Error
-	resData = models.ResData{
-		Code: 1,
-		Msg:  "新生入库失败",
-		Data: nil,
-	}
+
 	if dbErr == nil {
-		resData.Code = 1
-		resData.Msg = "新生入库成功！"
+		auth.OutputErr(c.Ctx, 1, "新生入库成功！")
+	} else {
+		auth.OutputErr(c.Ctx, 1, "新生入库失败")
 	}
 
-	c.Data["json"] = resData
-	c.ServeJSON()
 }

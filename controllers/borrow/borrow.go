@@ -28,10 +28,6 @@ func (c *BorrowController) BorrowList() {
 
 	db := conn.GetORM()
 
-	resData := models.ResData{
-		Code: 1,
-		Msg:  "查询出错",
-	}
 	var sql_str = "book_name LIKE '%" + book_name + "%'"
 	if student_id != 0 {
 		sql_str += " AND student_id =" + strconv.Itoa(student_id)
@@ -43,25 +39,22 @@ func (c *BorrowController) BorrowList() {
 	countErr := db.Table("borrow").Where(sql_str).Find(&borrows).Count(&count).Error
 	pager := models.Pager{}
 	if countErr != nil {
-		resData.Code = 1
-		resData.Msg = "查询数据数量出错"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "查询数据数量出错")
+		return
 	} else {
 		pager = base.GetPager(page, limit, count)
 	}
 	borrowErr := db.Table("borrow").Order("borrow_state desc").Order("start_time desc").Where(sql_str).Limit(limit).Offset((page - 1) * limit).Find(&borrows).Error
 
 	if borrowErr == nil {
-		resData.Code = 0
-		resData.Msg = "success"
-		resData.Data = models.List{
+		list := models.List{
 			Pager: pager,
 			List:  borrows,
 		}
+		auth.OutputSuccess(c.Ctx, list)
+	} else {
+		auth.OutputErr(c.Ctx, 1, "借阅聊表查询出错，请重试！")
 	}
-	c.Data["json"] = resData
-	c.ServeJSON()
 }
 func (c *BorrowController) TimeoutList() {
 	student_id, _ := c.GetInt("student_id", 0)
@@ -79,15 +72,10 @@ func (c *BorrowController) TimeoutList() {
 		sql_str += "AND student_id=" + strconv.Itoa(student_id)
 	}
 
-	var resData models.ResData
-
 	var count int
 	countErr := db.Table("borrow").Where(sql_str).Count(&count).Error
 	if countErr != nil {
-		resData.Code = 1
-		resData.Msg = "查询出错，请重试"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "查询出错，请重试")
 		return
 	}
 	pager := base.GetPager(page, limit, count)
@@ -95,10 +83,7 @@ func (c *BorrowController) TimeoutList() {
 	var borrows []models.Borrow
 	dbErr := db.Table("borrow").Where(sql_str).Order("borrow_state desc").Order("end_time asc").Limit(limit).Offset((page - 1) * limit).Find(&borrows).Error
 	if dbErr != nil {
-		resData.Code = 1
-		resData.Msg = "查询出错，请重试"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "查询出错，请重试")
 		return
 	}
 	list := models.List{
@@ -106,11 +91,7 @@ func (c *BorrowController) TimeoutList() {
 		List:  borrows,
 	}
 
-	resData.Code = 0
-	resData.Msg = "success"
-	resData.Data = list
-	c.Data["json"] = resData
-	c.ServeJSON()
+	auth.OutputSuccess(c.Ctx, list)
 }
 func (c *BorrowController) Borrow() {
 	student_id, _ := c.GetInt("student_id", 0)
@@ -118,48 +99,35 @@ func (c *BorrowController) Borrow() {
 	borrow_days, _ := c.GetInt64("borrow_days", 0)
 
 	db := conn.GetORM()
-	resData := models.ResData{}
 	var student models.Student
 	var book models.Book
 	// 查询借阅学生
 	studentErr := db.Table("student").Where(fmt.Sprintf("student_id=%d", student_id)).First(&student).Error
 	if studentErr != nil {
-		resData.Code = 1
-		resData.Msg = "没有检索到该学生,请检查学号是否错误"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "没有检索到该学生,请检查学号是否错误")
 		return
 	}
 	// 查询借阅书籍
 	bookErr := db.Table("book").Where(fmt.Sprintf("book_id=%d", book_id)).First(&book).Error
 	if bookErr != nil {
-		resData.Code = 1
-		resData.Msg = "没有检索到该书籍"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "没有检索到该书籍")
 		return
 	}
+
 	if book.BorrowState == 1 || book.DeletState == 1 {
-		resData.Code = 1
 		if book.BorrowState == 1 {
-			resData.Msg = "此书籍已经借出，请借阅其他书籍"
+			auth.OutputErr(c.Ctx, 1, "此书籍已经借出，请借阅其他书籍")
 		}
 		if book.DeletState == 1 {
-			resData.Msg = "此书籍已下架，请借阅其他书籍"
+			auth.OutputErr(c.Ctx, 1, "此书籍已下架，请借阅其他书籍")
 		}
-		c.Data["json"] = resData
-		c.ServeJSON()
-		return
 	}
 	// 查询录入管理员
 	admin := auth.GetAdminFromToken(c.Ctx)
 	// 改写图书状态
 	bookStateErr := db.Table("book").Where(fmt.Sprintf("book_id=%d", book_id)).Update("borrow_state", 1).Error
 	if bookStateErr != nil {
-		resData.Code = 1
-		resData.Msg = "书籍借出出错，请重新处理！"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "书籍借出出错，请重新处理！")
 		return
 	}
 
@@ -180,29 +148,18 @@ func (c *BorrowController) Borrow() {
 	}
 	borrowErr := db.Create(&borrow).Error
 	if borrowErr != nil {
-		resData.Code = 1
-		resData.Msg = "书籍借出出错，请重新处理！"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "书籍借出出错，请重新处理！")
 		return
 	} else {
-		resData.Code = 0
-		resData.Msg = "书籍借出成功！"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputSuccess(c.Ctx, nil)
 		return
 	}
 }
 func (c *BorrowController) Back() {
 	borrow_id, _ := c.GetInt("borrow_id", 0)
 
-	var resData models.ResData
-
 	if borrow_id == 0 {
-		resData.Code = 1
-		resData.Msg = "请传入借阅编号！"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "请传入借阅编号！")
 		return
 	}
 
@@ -213,10 +170,7 @@ func (c *BorrowController) Back() {
 	db := conn.GetORM()
 	borrowErr := db.Where(&borrow).First(&borrowBook).Updates(map[string]interface{}{"end_time": time.Now().Unix(), "borrow_state": 0}).Error
 	if borrowErr != nil {
-		resData.Code = 1
-		resData.Msg = "还书出错，请重新操作！"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "还书出错，请重新操作！")
 		return
 	}
 	book := models.Book{
@@ -225,14 +179,8 @@ func (c *BorrowController) Back() {
 
 	bookErr := db.Table("book").Where(&book).Update("borrow_state", 0).Error
 	if bookErr != nil {
-		resData.Code = 1
-		resData.Msg = "还书出错，请重新操作！"
-		c.Data["json"] = resData
-		c.ServeJSON()
+		auth.OutputErr(c.Ctx, 1, "还书出错，请重新操作！")
 		return
 	}
-	resData.Code = 0
-	resData.Msg = "success"
-	c.Data["json"] = resData
-	c.ServeJSON()
+	auth.OutputSuccess(c.Ctx, nil)
 }
