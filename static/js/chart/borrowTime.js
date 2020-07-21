@@ -30,6 +30,9 @@ var app = new Vue({
         xAxis.push(vueExtends.formateDateTime(item));
       });
       this.info.series.map(function (item) {
+        item.name = item.name.length > 5 ? item.name.substring(0, 5) + "···" : item.name;
+        console.log(item);
+
         var ser = _objectSpread({
           type: 'area'
         }, item);

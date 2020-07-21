@@ -19,6 +19,8 @@ let app=new Vue({
                 xAxis.push(vueExtends.formateDateTime(item))
             })
             this.info.series.map(item=>{
+                item.name=item.name.length>5?item.name.substring(0,5)+"···":item.name;
+                console.log(item);
                 let ser={type:'area',...item}
                 series.push(ser);
             })
@@ -32,7 +34,7 @@ let app=new Vue({
                 },
                 series,
             };
-            // 折线图带有区块填充色
+            // 柱状图
             new barChart("chart", chartOptionArea);
         }
     },

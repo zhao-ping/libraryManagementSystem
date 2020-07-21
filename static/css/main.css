@@ -1,6 +1,6 @@
 @import url("//at.alicdn.com/t/font_1876609_r6a0oojsd9.css");
 @import url("base.css");
-body{color: #6c757d;font-size: 14px;}
+body{color: #6c757d;font-size: 14px;min-width: 1200px;overflow: auto;}
 .color-indigo{color:rgba(114,124,245,1)}
 .color-purple{color: rgba(107,94,174,1);}
 .color-orange{color: #fd7e14;}

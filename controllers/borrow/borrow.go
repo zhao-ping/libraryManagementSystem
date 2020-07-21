@@ -64,7 +64,7 @@ func (c *BorrowController) TimeoutList() {
 
 	db := conn.GetORM()
 	time := time.Now().Unix()
-	sql_str := "end_time < " + strconv.FormatInt(time, 10) + " AND book_name LIKE '%" + book_name + "%'"
+	sql_str := "borrow_state=1 AND end_time < " + strconv.FormatInt(time, 10) + " AND book_name LIKE '%" + book_name + "%'"
 
 	fmt.Println("sql_str")
 	fmt.Println(sql_str)

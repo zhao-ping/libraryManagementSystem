@@ -299,6 +299,7 @@ class barChart{
             this.xAxisPoint.push(this.left+(i+0.5)*everyWidth);
         }
         // 横坐标标记
+        this.context.textAlign="center"
         this.xAxis.data.map((item,i)=>{
             let x=this.xAxisPoint[i]
             this.context.fillText(item,x,this.bottom+this.height*0.05, this.everyWidth);

@@ -100,9 +100,9 @@ type SingleBookTime struct {
 	Data []int  `gorm:"column:data" json:"data"`
 }
 type ResData struct {
-	Code int         `json:"code"` //0:成功，1：错误并提示
-	Msg  string      `json:"msg"`
-	Data interface{} `json:"data"`
+	Code int         `json:"code"` //0:成功，1：错误并提示 2：管理员登录过期
+	Msg  string      `json:"msg"`  //提示信息
+	Data interface{} `json:"data"` //数据
 }
 
 type Pager struct {

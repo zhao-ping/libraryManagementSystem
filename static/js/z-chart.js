@@ -419,6 +419,7 @@ var barChart = function () {
         this.xAxisPoint.push(this.left + (i + 0.5) * everyWidth);
       }
 
+      this.context.textAlign = "center";
       this.xAxis.data.map(function (item, i) {
         var x = _this4.xAxisPoint[i];
 
